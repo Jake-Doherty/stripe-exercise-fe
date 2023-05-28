@@ -1,6 +1,6 @@
 export async function fetchStripe() {
   try {
-    const resp = await fetch('/create-checkout-session', {
+    const resp = await fetch('http://localhost:7890/api/v1/create-checkout-session', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
