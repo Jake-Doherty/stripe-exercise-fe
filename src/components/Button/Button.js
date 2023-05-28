@@ -3,7 +3,6 @@ import { fetchStripe } from '../../services/stripe.js';
 
 export default function Button() {
   const handleClick = async () => {
-    console.log(`THOU HAST CLICKITHED ME!`);
     const data = await fetchStripe();
     return data;
   };
