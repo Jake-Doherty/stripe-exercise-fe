@@ -7,5 +7,5 @@ export default function Button() {
     return data;
   };
 
-  return <button onClick={handleClick}>Button</button>;
+  return <button onClick={handleClick}>Monthly</button>;
 }
