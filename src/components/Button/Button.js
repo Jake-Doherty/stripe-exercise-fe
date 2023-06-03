@@ -1,10 +1,15 @@
 import React from 'react';
-import { fetchStripe } from '../../services/stripe.js';
+import { fetchStripe, fetchCustomerPortal } from '../../services/stripe.js';
 
 export default function Button() {
   const handleClick = async (e) => {
     const priceId = e.target.value;
     const data = await fetchStripe({ priceId });
+    return data;
+  };
+
+  const handleCustomerPortal = async () => {
+    const data = await fetchCustomerPortal();
     return data;
   };
 
@@ -23,6 +28,9 @@ export default function Button() {
         onClick={(e) => handleClick(e)}
       >
         Annual
+      </button>
+      <button style={{ margin: '10px' }} onClick={(e) => handleCustomerPortal(e)}>
+        Customer Portal
       </button>
     </>
   );
