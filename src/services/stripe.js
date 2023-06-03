@@ -19,3 +19,23 @@ export async function fetchStripe({ priceId }) {
     console.error(e);
   }
 }
+
+export async function fetchCustomerPortal() {
+  try {
+    const resp = await fetch('http://localhost:7890/api/v1/create-customer-portal-session', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    const data = await resp.json();
+
+    if (resp.ok) {
+      window.location = data.url;
+    } else {
+      return Promise.reject(data);
+    }
+  } catch (e) {
+    console.error(e);
+  }
+}
