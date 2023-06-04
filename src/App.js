@@ -4,7 +4,7 @@ import './App.css';
 import Button from './components/Button/Button.js';
 import Success from './components/Success/Success.js';
 import Cancel from './components/Cancel/Cancel.js';
-
+import AuthForm from './components/AuthForm/AuthForm.js';
 function App() {
   const navigate = useNavigate();
 
@@ -14,6 +14,7 @@ function App() {
         <Route path="/" element={<Button />} />
         <Route path="/success" element={<Success {...{ navigate }} />} />
         <Route path="/cancel" element={<Cancel {...{ navigate }} />} />
+        <Route path="/auth" element={<AuthForm {...{ navigate }} />} />
       </Routes>
     </div>
   );
