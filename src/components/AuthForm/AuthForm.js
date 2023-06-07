@@ -5,7 +5,17 @@ import { useAccount } from '../../Context/AccountContext.js';
 export default function AuthForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { signup } = useAccount;
+  const { fetchSignUp } = useAccount();
+
+  const handleRegistration = async (e) => {
+    e.preventDefault();
+    try {
+      await fetchSignUp({ email, password });
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log(error);
+    }
+  };
 
   return (
     <form onSubmit={(e) => e.preventDefault()}>
@@ -15,13 +25,27 @@ export default function AuthForm() {
       </div>
 
       <div className="email-container">
-        <input className="input" type="email" placeholder="email@email.com" value={email} />
+        <input
+          autoComplete="off"
+          className="input"
+          type="email"
+          placeholder="email@email.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
 
-        <input className="input" type="password" placeholder="password" value={password} />
+        <input
+          autoComplete="off"
+          className="input"
+          type="password"
+          placeholder="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
       </div>
 
       <div>
-        <button onClick={signup}>Submit</button>
+        <button onClick={(e) => handleRegistration(e)}>Submit</button>
       </div>
     </form>
   );
