@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useParams } from 'react-router-dom';
 import { useAccount } from '../../Context/AccountContext.js';
 
 export default function AuthForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { fetchSignUp } = useAccount();
+  const { fetchAuth } = useAccount();
+  const { type } = useParams();
 
   const handleRegistration = async (e) => {
     e.preventDefault();
     try {
-      await fetchSignUp({ email, password });
+      await fetchAuth({ email, password, type });
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
@@ -20,8 +21,11 @@ export default function AuthForm() {
   return (
     <form onSubmit={(e) => e.preventDefault()}>
       <div className="sign-in-sign-out">
-        <NavLink to="/auth/sign-in">Sign-in</NavLink>
-        <NavLink to="/auth/sign-up">Sign-up</NavLink>
+        {type === 'sign-in' ? (
+          <NavLink to="/auth/sign-up">{`Don't have an account yet? Sign-up here.`}</NavLink>
+        ) : (
+          <NavLink to="/auth/sign-in"> Already have an account? Sign-in here.</NavLink>
+        )}
       </div>
 
       <div className="email-container">
