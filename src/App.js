@@ -14,7 +14,7 @@ function App() {
         <Route path="/" element={<Button />} />
         <Route path="/success" element={<Success {...{ navigate }} />} />
         <Route path="/cancel" element={<Cancel {...{ navigate }} />} />
-        <Route path="/auth" element={<AuthForm {...{ navigate }} />} />
+        <Route path="/auth/:type" element={<AuthForm {...{ navigate }} />} />
       </Routes>
     </div>
   );
