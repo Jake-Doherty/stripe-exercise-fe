@@ -1,29 +1,50 @@
 import { createContext, useContext } from 'react';
-import userPool from '../services/userPool.js';
 const AccountContext = createContext();
 
 const AccountProvider = ({ children }) => {
-  const signup = async ({ email, name, password }) => {
-    return await new Promise((resolve, reject) => {
-      let attributeList = [];
-      let userName = {
-        Name: 'name',
-        Value: name,
-      };
-      attributeList.push(userName);
-
-      userPool.signUp(email, password, attributeList, null, (err, result) => {
-        if (err) {
-          console.log('Failed to register', err.message);
-          reject();
-        } else {
-          console.log('Account created successfully', result);
-          resolve();
-        }
+  async function fetchSignUp({ email, password }) {
+    try {
+      const resp = await fetch('http://localhost:7890/api/v1/auth/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
       });
-    });
-  };
-  return <AccountContext.Provider value={{ signup }}>{children}</AccountContext.Provider>;
+      const data = await resp.json();
+      if (resp.ok) {
+        return data;
+      } else {
+        return Promise.reject(data);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+  async function fetchSignIn({ email, password }) {
+    try {
+      const resp = await fetch('http://localhost:7890/api/v1/auth/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await resp.json();
+      if (resp.ok) {
+        return data;
+      } else {
+        return Promise.reject(data);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+  return (
+    <AccountContext.Provider value={{ fetchSignUp, fetchSignIn }}>
+      {children}
+    </AccountContext.Provider>
+  );
 };
 
 const useAccount = () => {
