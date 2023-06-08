@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink, useParams } from 'react-router-dom';
 import { useAccount } from '../../Context/AccountContext.js';
+import './AuthForm.css';
 
 export default function AuthForm() {
   const [email, setEmail] = useState('');
