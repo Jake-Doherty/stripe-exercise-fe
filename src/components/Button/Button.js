@@ -1,7 +1,10 @@
 import React from 'react';
 import { fetchStripe, fetchCustomerPortal } from '../../services/stripe.js';
+import { useAccount } from '../../Context/AccountContext.js';
 
 export default function Button() {
+  const { handleSignOut } = useAccount();
+
   const handleClick = async (e) => {
     const priceId = e.target.value;
     const data = await fetchStripe({ priceId });
@@ -31,6 +34,9 @@ export default function Button() {
       </button>
       <button style={{ margin: '10px' }} onClick={(e) => handleCustomerPortal(e)}>
         Customer Portal
+      </button>
+      <button value={'fumalicious@gmail.com'} onClick={(e) => handleSignOut(e.target.value)}>
+        Sign Out
       </button>
     </>
   );
