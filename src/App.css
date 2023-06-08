@@ -36,3 +36,12 @@
     transform: rotate(360deg);
   }
 }
+
+/* CUSTOM STYLES START HERE */
+
+button {
+  background-color: rgb(106, 106, 131);
+  border: 1px solid rgb(186, 186, 204);
+  border-radius: 5px;
+  color: rgb(209, 209, 209);
+}
