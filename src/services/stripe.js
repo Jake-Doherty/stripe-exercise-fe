@@ -6,6 +6,7 @@ export async function fetchStripe({ priceId }) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ priceId }),
+      credentials: 'include',
     });
     const data = await resp.json();
 
@@ -27,6 +28,7 @@ export async function fetchCustomerPortal() {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
     });
     const data = await resp.json();
 
