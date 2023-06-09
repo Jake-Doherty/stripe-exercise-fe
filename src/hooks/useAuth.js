@@ -1,4 +1,4 @@
-export default function useAuth() {
+export default function useAuth(setUser) {
   const fetchAuth = async ({ email, password, type }) => {
     if (type === 'sign-up') {
       try {
@@ -11,7 +11,7 @@ export default function useAuth() {
         });
         const data = await resp.json();
         if (resp.ok) {
-          window.location = '/auth/sign-in';
+          location.replace('/auth/sign-in');
           return data;
         } else {
           return Promise.reject(data);
@@ -32,7 +32,8 @@ export default function useAuth() {
         });
         const data = await resp.json();
         if (resp.ok) {
-          window.location = '/';
+          setUser(data.user.sub);
+
           return data;
         } else {
           return Promise.reject(data);
@@ -52,7 +53,7 @@ export default function useAuth() {
       });
       const data = await resp.json();
       if (resp.ok) {
-        window.location = '/auth/sign-in';
+        setUser(null);
         return data;
       } else {
         return Promise.reject(data);
