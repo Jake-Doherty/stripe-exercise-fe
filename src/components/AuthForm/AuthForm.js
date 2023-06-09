@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { NavLink, useParams } from 'react-router-dom';
+import { NavLink, useParams, Navigate } from 'react-router-dom';
 import { useAccount } from '../../Context/AccountContext.js';
 import './AuthForm.css';
 
 export default function AuthForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { fetchAuth } = useAccount();
+  const { fetchAuth, user } = useAccount();
   const { type } = useParams();
 
   const handleRegistration = async (e) => {
@@ -18,6 +18,10 @@ export default function AuthForm() {
       console.log(error);
     }
   };
+
+  if (user) {
+    return <Navigate to="/" />;
+  }
 
   return (
     <form onSubmit={(e) => e.preventDefault()}>

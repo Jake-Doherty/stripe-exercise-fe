@@ -1,9 +1,10 @@
 import React from 'react';
+import { Navigate } from 'react-router-dom';
 import { fetchStripe, fetchCustomerPortal } from '../../services/stripe.js';
 import { useAccount } from '../../Context/AccountContext.js';
 
 export default function Button() {
-  const { handleSignOut } = useAccount();
+  const { handleSignOut, user } = useAccount();
 
   const handleClick = async (e) => {
     const priceId = e.target.value;
@@ -15,6 +16,10 @@ export default function Button() {
     const data = await fetchCustomerPortal();
     return data;
   };
+
+  if (!user) {
+    return <Navigate to={'/auth/sign-in'} />;
+  }
 
   return (
     <>
