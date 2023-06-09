@@ -1,11 +1,13 @@
-import { createContext, useContext } from 'react';
+import { createContext, useContext, useState } from 'react';
 import useAuth from '../hooks/useAuth.js';
 const AccountContext = createContext();
 
 const AccountProvider = ({ children }) => {
-  const { fetchAuth, handleSignOut } = useAuth();
+  const [user, setUser] = useState(null);
+  const { fetchAuth, handleSignOut } = useAuth(setUser);
+
   return (
-    <AccountContext.Provider value={{ fetchAuth, handleSignOut }}>
+    <AccountContext.Provider value={{ fetchAuth, handleSignOut, user }}>
       {children}
     </AccountContext.Provider>
   );
