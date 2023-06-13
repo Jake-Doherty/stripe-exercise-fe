@@ -6,7 +6,7 @@ import './AuthForm.css';
 export default function AuthForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { fetchAuth, user } = useAccount();
+  const { fetchAuth, isAuthenticated } = useAccount();
   const { type } = useParams();
 
   const handleRegistration = async (e) => {
@@ -19,7 +19,7 @@ export default function AuthForm() {
     }
   };
 
-  if (user) {
+  if (isAuthenticated) {
     return <Navigate to="/" />;
   }
 

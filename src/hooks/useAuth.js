@@ -1,43 +1,80 @@
-export default function useAuth(setUser) {
+const { userPool, AmazonCognitoIdentity } = require('../services/userPool.js');
+export default function useAuth() {
   const fetchAuth = async ({ email, password, type }) => {
     if (type === 'sign-up') {
       try {
-        const resp = await fetch('http://localhost:7890/api/v1/auth/sign-up', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email, password }),
+        return new Promise((resolve, reject) => {
+          const attributeList = [
+            new AmazonCognitoIdentity.CognitoUserAttribute({
+              Name: 'email',
+              Value: email,
+            }),
+          ];
+
+          userPool.signUp(email, password, attributeList, null, (err, result) => {
+            if (err) {
+              reject(err);
+            } else {
+              // we believe this is where the response from sign up comes from
+              resolve(result);
+            }
+          });
         });
-        const data = await resp.json();
-        if (resp.ok) {
-          location.replace('/auth/sign-in');
-          return data;
-        } else {
-          return Promise.reject(data);
-        }
+        // const resp = await fetch('http://localhost:7890/api/v1/auth/sign-up', {
+        //   method: 'POST',
+        //   headers: {
+        //     'Content-Type': 'application/json',
+        //   },
+        //   body: JSON.stringify({ email, password }),
+        // });
+        // const data = await resp.json();
+        // if (resp.ok) {
+        //   location.replace('/auth/sign-in');
+        //   return data;
+        // } else {
+        //   return Promise.reject(data);
+        // }
       } catch (e) {
         console.error(e);
       }
     }
     if (type === 'sign-in') {
       try {
-        const resp = await fetch('http://localhost:7890/api/v1/auth/sign-in', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email, password }),
-          credentials: 'include',
-        });
-        const data = await resp.json();
-        if (resp.ok) {
-          setUser(data.user);
+        return new Promise((resolve, reject) => {
+          const authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails({
+            Username: email,
+            Password: password,
+          });
 
-          return data;
-        } else {
-          return Promise.reject(data);
-        }
+          const cognitoUser = new AmazonCognitoIdentity.CognitoUser({
+            Username: email,
+            Pool: userPool,
+          });
+
+          cognitoUser.authenticateUser(authenticationDetails, {
+            onSuccess: (result) => {
+              resolve(result);
+            },
+            onFailure: (err) => {
+              reject(err);
+            },
+          });
+        });
+        // const resp = await fetch('http://localhost:7890/api/v1/auth/sign-in', {
+        //   method: 'POST',
+        //   headers: {
+        //     'Content-Type': 'application/json',
+        //   },
+        //   body: JSON.stringify({ email, password }),
+        //   credentials: 'include',
+        // });
+        // const data = await resp.json();
+        // if (resp.ok) {
+        //   setUser(data.user);
+        //   return data;
+        // } else {
+        //   return Promise.reject(data);
+        // }
       } catch (e) {
         console.error(e);
       }
@@ -46,18 +83,35 @@ export default function useAuth(setUser) {
 
   const handleSignOut = async (email_1) => {
     try {
-      const resp = await fetch('http://localhost:7890/api/v1/auth/sign-out', {
-        method: 'POST',
-        credentials: 'include',
-        body: JSON.stringify({ email_1 }),
+      return new Promise((resolve, reject) => {
+        const cognitoUser = new AmazonCognitoIdentity.CognitoUser({
+          Username: email_1,
+          Pool: userPool,
+        });
+
+        cognitoUser.signOut();
+
+        // You could also check the current session to ensure the user is signed out
+        cognitoUser.getSession((err, session) => {
+          if (err || !session.isValid()) {
+            resolve();
+          } else {
+            reject('User is still signed in');
+          }
+        });
       });
-      const data = await resp.json();
-      if (resp.ok) {
-        setUser(null);
-        return data;
-      } else {
-        return Promise.reject(data);
-      }
+      // const resp = await fetch('http://localhost:7890/api/v1/auth/sign-out', {
+      //   method: 'POST',
+      //   credentials: 'include',
+      //   body: JSON.stringify({ email_1 }),
+      // });
+      // const data = await resp.json();
+      // if (resp.ok) {
+      //   setUser(null);
+      //   return data;
+      // } else {
+      //   return Promise.reject(data);
+      // }
     } catch (e) {
       console.error(e);
     }
