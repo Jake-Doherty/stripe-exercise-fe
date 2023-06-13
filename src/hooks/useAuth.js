@@ -32,7 +32,7 @@ export default function useAuth(setUser) {
         });
         const data = await resp.json();
         if (resp.ok) {
-          setUser(data.user.sub);
+          setUser(data.user);
 
           return data;
         } else {
