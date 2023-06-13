@@ -81,8 +81,9 @@ export default function useAuth() {
     }
   };
 
-  const handleSignOut = async (email_1) => {
+  const handleSignOut = async (email_1, setUser, setIsAuthenticated) => {
     try {
+      /////////////////
       return new Promise((resolve, reject) => {
         const cognitoUser = new AmazonCognitoIdentity.CognitoUser({
           Username: email_1,
@@ -94,12 +95,15 @@ export default function useAuth() {
         // You could also check the current session to ensure the user is signed out
         cognitoUser.getSession((err, session) => {
           if (err || !session.isValid()) {
+            setUser(null);
+            setIsAuthenticated(false);
             resolve();
           } else {
             reject('User is still signed in');
           }
         });
       });
+      /////////////////
       // const resp = await fetch('http://localhost:7890/api/v1/auth/sign-out', {
       //   method: 'POST',
       //   credentials: 'include',
