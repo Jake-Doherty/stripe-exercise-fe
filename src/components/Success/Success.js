@@ -1,10 +1,11 @@
 import React from 'react';
+import { Navigate } from 'react-router-dom';
 
-export default function Success({ navigate }) {
+export default function Success() {
   return (
     <>
       <h1>Success!</h1>
-      <button onClick={() => navigate('/')}>Go Back</button>
+      <button onClick={() => <Navigate to={'/'} />}>Go Back</button>
     </>
   );
 }
