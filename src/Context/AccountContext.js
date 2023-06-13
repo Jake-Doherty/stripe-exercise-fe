@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect } from 'react';
 // import { CognitoUserPool } from 'amazon-cognito-identity-js';
 import useAuth from '../hooks/useAuth.js';
 import { userPool } from '../services/userPool.js';
+
 const AccountContext = createContext();
 
 const AccountProvider = ({ children }) => {
@@ -29,10 +30,12 @@ const AccountProvider = ({ children }) => {
     } else {
       setIsAuthenticated(false);
     }
-  }, [cognitoUser, isAuthenticated]);
+  }, [cognitoUser]);
 
   return (
-    <AccountContext.Provider value={{ fetchAuth, handleSignOut, user, isAuthenticated }}>
+    <AccountContext.Provider
+      value={{ fetchAuth, handleSignOut, user, isAuthenticated, setIsAuthenticated, setUser }}
+    >
       {children}
     </AccountContext.Provider>
   );
