@@ -1,11 +1,11 @@
-export async function fetchStripe({ priceId }) {
+export async function fetchStripe({ priceId, user }) {
   try {
     const resp = await fetch('http://localhost:7890/api/v1/create-checkout-session', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ priceId }),
+      body: JSON.stringify({ priceId, user }),
       credentials: 'include',
     });
     const data = await resp.json();
