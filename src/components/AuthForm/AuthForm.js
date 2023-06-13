@@ -6,13 +6,20 @@ import './AuthForm.css';
 export default function AuthForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { fetchAuth, isAuthenticated } = useAccount();
+  const { fetchAuth, isAuthenticated, setIsAuthenticated } = useAccount();
   const { type } = useParams();
 
   const handleRegistration = async (e) => {
     e.preventDefault();
     try {
-      await fetchAuth({ email, password, type });
+      const result = await fetchAuth({ email, password, type });
+      if (result) {
+        setIsAuthenticated(true);
+        // eslint-disable-next-line no-console
+        console.log('result', result);
+      }
+      // eslint-disable-next-line no-console
+      console.log('result', result);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
