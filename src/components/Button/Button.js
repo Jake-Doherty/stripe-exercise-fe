@@ -8,7 +8,7 @@ export default function Button() {
 
   const handleClick = async (e) => {
     const priceId = e.target.value;
-    const data = await fetchStripe({ priceId });
+    const data = await fetchStripe({ priceId, user });
     return data;
   };
 
