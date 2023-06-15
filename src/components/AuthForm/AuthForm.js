@@ -15,14 +15,12 @@ export default function AuthForm() {
       const result = await fetchAuth({ email, password, type });
       if (result) {
         setIsAuthenticated(true);
-        // eslint-disable-next-line no-console
-        console.log('result', result);
+      } else {
+        setIsAuthenticated(false);
       }
-      // eslint-disable-next-line no-console
-      console.log('result', result);
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.log(error);
+      console.error(error);
+      setIsAuthenticated(false);
     }
   };
 
