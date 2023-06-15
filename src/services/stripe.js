@@ -12,7 +12,7 @@ export async function fetchStripe({ priceId, user }) {
 
     if (resp.ok) {
       window.location = data.url;
-      return resp.json();
+      return resp;
     } else {
       return Promise.reject(data);
     }
