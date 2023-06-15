@@ -4,11 +4,11 @@ import { fetchStripe, fetchCustomerPortal } from '../../services/stripe.js';
 import { useAccount } from '../../Context/AccountContext.js';
 
 export default function Button() {
-  const { handleSignOut, cognitoUser, isAuthenticated, setUser, setIsAuthenticated } = useAccount();
+  const { handleSignOut, user, isAuthenticated, setUser, setIsAuthenticated } = useAccount();
 
   const handleClick = async (e) => {
     const priceId = e.target.value;
-    const data = await fetchStripe({ priceId, cognitoUser });
+    const data = await fetchStripe({ priceId, user });
     return data;
   };
 
