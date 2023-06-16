@@ -1,6 +1,8 @@
+import { createCookies, deleteCookies } from '../services/cookieAPI.js';
+
 const { userPool, AmazonCognitoIdentity } = require('../services/userPool.js');
 
-export default function useAuth() {
+export default function useAuth(setUser) {
   const fetchAuth = async ({ email, password, type }) => {
     if (type === 'sign-up') {
       try {
@@ -20,6 +22,7 @@ export default function useAuth() {
             }
           });
         });
+
 
         // fetch call to our server to enter email and sub into our database
         const resp = await fetch('http://localhost:7890/api/v1/auth/sign-up', {
@@ -56,7 +59,9 @@ export default function useAuth() {
           });
 
           cognitoUser.authenticateUser(authenticationDetails, {
-            onSuccess: (result) => {
+            onSuccess: async (result) => {
+              setUser(cognitoUser.username);
+              await createCookies(result);
               resolve(result);
             },
             onFailure: (err) => {
@@ -64,21 +69,6 @@ export default function useAuth() {
             },
           });
         });
-        // const resp = await fetch('http://localhost:7890/api/v1/auth/sign-in', {
-        //   method: 'POST',
-        //   headers: {
-        //     'Content-Type': 'application/json',
-        //   },
-        //   body: JSON.stringify({ email, password }),
-        //   credentials: 'include',
-        // });
-        // const data = await resp.json();
-        // if (resp.ok) {
-        //   setUser(data.user);
-        //   return data;
-        // } else {
-        //   return Promise.reject(data);
-        // }
       } catch (e) {
         console.error(e);
       }
@@ -87,7 +77,6 @@ export default function useAuth() {
 
   const handleSignOut = async (email_1, setUser, setIsAuthenticated) => {
     try {
-      /////////////////
       return new Promise((resolve, reject) => {
         const cognitoUser = new AmazonCognitoIdentity.CognitoUser({
           Username: email_1,
@@ -97,29 +86,19 @@ export default function useAuth() {
         cognitoUser.signOut();
 
         // You could also check the current session to ensure the user is signed out
-        cognitoUser.getSession((err, session) => {
+        cognitoUser.getSession(async (err, session) => {
           if (err || !session.isValid()) {
             setUser(null);
             setIsAuthenticated(false);
+            // delete cookies and session data from cookies/local storage
+            await deleteCookies();
+            window.localStorage.clear();
             resolve();
           } else {
             reject('User is still signed in');
           }
         });
       });
-      /////////////////
-      // const resp = await fetch('http://localhost:7890/api/v1/auth/sign-out', {
-      //   method: 'POST',
-      //   credentials: 'include',
-      //   body: JSON.stringify({ email_1 }),
-      // });
-      // const data = await resp.json();
-      // if (resp.ok) {
-      //   setUser(null);
-      //   return data;
-      // } else {
-      //   return Promise.reject(data);
-      // }
     } catch (e) {
       console.error(e);
     }
