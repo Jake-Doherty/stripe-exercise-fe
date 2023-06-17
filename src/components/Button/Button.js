@@ -4,11 +4,11 @@ import { fetchStripe, fetchCustomerPortal } from '../../services/stripe.js';
 import { useAccount } from '../../Context/AccountContext.js';
 
 export default function Button() {
-  const { handleSignOut, user } = useAccount();
+  const { handleSignOut, user, isAuthenticated, setUser, setIsAuthenticated } = useAccount();
 
   const handleClick = async (e) => {
     const priceId = e.target.value;
-    const data = await fetchStripe({ priceId });
+    const data = await fetchStripe({ priceId, user });
     return data;
   };
 
@@ -17,7 +17,7 @@ export default function Button() {
     return data;
   };
 
-  if (!user) {
+  if (!isAuthenticated) {
     return <Navigate to={'/auth/sign-in'} />;
   }
 
@@ -40,7 +40,10 @@ export default function Button() {
       <button style={{ margin: '10px' }} onClick={(e) => handleCustomerPortal(e)}>
         Customer Portal
       </button>
-      <button value={'fumalicious@gmail.com'} onClick={(e) => handleSignOut(e.target.value)}>
+      <button
+        value={'fumalicious@gmail.com'}
+        onClick={(e) => handleSignOut(e.target.value, setUser, setIsAuthenticated)}
+      >
         Sign Out
       </button>
     </>

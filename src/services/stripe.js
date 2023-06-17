@@ -1,18 +1,19 @@
-export async function fetchStripe({ priceId }) {
+export async function fetchStripe({ priceId, user, idToken }) {
   try {
     const resp = await fetch('http://localhost:7890/api/v1/create-checkout-session', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + idToken,
       },
-      body: JSON.stringify({ priceId }),
+      body: JSON.stringify({ priceId, user }),
       credentials: 'include',
     });
     const data = await resp.json();
 
     if (resp.ok) {
       window.location = data.url;
-      return resp.json();
+      return resp;
     } else {
       return Promise.reject(data);
     }

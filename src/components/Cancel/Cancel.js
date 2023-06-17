@@ -1,6 +1,8 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
-export default function Cancel({ navigate }) {
+export default function Cancel() {
+  const navigate = useNavigate();
   return (
     <>
       <h1>Cancel</h1>
