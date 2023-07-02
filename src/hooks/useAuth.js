@@ -1,7 +1,5 @@
 import { createCookies, deleteCookies } from '../services/cookieAPI.js';
-
 const { userPool, AmazonCognitoIdentity } = require('../services/userPool.js');
-
 export default function useAuth(setUser) {
   const fetchAuth = async ({ email, password, type }) => {
     if (type === 'sign-up') {
@@ -13,7 +11,6 @@ export default function useAuth(setUser) {
               Value: email,
             }),
           ];
-
           userPool.signUp(email, password, attributeList, null, (err, result) => {
             if (err) {
               reject(err);
@@ -22,8 +19,6 @@ export default function useAuth(setUser) {
             }
           });
         });
-
-
         // fetch call to our server to enter email and sub into our database
         const resp = await fetch('http://localhost:7890/api/v1/auth/sign-up', {
           method: 'POST',
@@ -32,9 +27,7 @@ export default function useAuth(setUser) {
           },
           body: JSON.stringify({ email, sub: result.userSub }),
         });
-
         const data = await resp.json();
-
         if (resp.ok) {
           location.replace('/auth/sign-in');
           return data;
@@ -52,12 +45,10 @@ export default function useAuth(setUser) {
             Username: email,
             Password: password,
           });
-
           const cognitoUser = new AmazonCognitoIdentity.CognitoUser({
             Username: email,
             Pool: userPool,
           });
-
           cognitoUser.authenticateUser(authenticationDetails, {
             onSuccess: async (result) => {
               setUser(cognitoUser.username);
@@ -74,7 +65,6 @@ export default function useAuth(setUser) {
       }
     }
   };
-
   const handleSignOut = async (email_1, setUser, setIsAuthenticated) => {
     try {
       return new Promise((resolve, reject) => {
